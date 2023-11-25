@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+
+# Resumidamente, este arquivo YAML descreve a criação de um pod chamado "nginx" que contém um contêiner
+# baseado na imagem mais recente do nginx e que expõe a porta 80. Este pod pode ser implantado no Kubernetes
+# para executar um servidor web nginx.
+
+# Executar:
+# comando: kubectl apply -f nginx-pod.yaml
+
+# ver podes
+# comando: kubectl get pods
+
+# entrar no container
+# comando: kubectl exec -it nginx -- /bin/bash
+
+# o que é um pod?
+# O Pod é a menor unidade no Kubernetes e representa um ambiente de execução para um ou mais contêineres relacionados.
+
+# encerrar
+# comando: kubectl delete pod NOME_DO_POD

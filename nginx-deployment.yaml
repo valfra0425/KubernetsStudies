@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: front-end
+spec:
+  selector:
+    matchLabels:
+      app: front-end
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: front-end
+    spec:
+      containers:
+       - name: nginx
+         image: denirow/prog-redes
+         ports:
+         - containerPort: 80
+
+# Esse Deployment, portanto, é responsável por garantir que dois pods baseados na imagem "denirow/prog-redes" com o rótulo "app: front-end"
+# estejam em execução. Ele usa uma estratégia de atualização gradual (RollingUpdate) quando há alterações a serem aplicadas.
+
+# Executar:
+# comando: kubectl apply -f nginx-deployment.yaml
+
+# ver Deployments
+# comando: kubectl get deployments
+# ver pods
+# kubectl get pods
+
+# entrar no container
+# comando: kubectl exec -it nome-do-pod -- /bin/bash
+
+# Definição: O Deployment é um objeto no Kubernetes que gerencia a implantação de aplicativos em pods. Ele fornece atualizações declarativas para os aplicativos.
+# Características Principais:
+# Gerencia a criação, atualização e remoção de pods em um cluster.
+# Pode garantir que um número especificado de réplicas de pods esteja em execução.
+# Facilita atualizações de aplicativos com rotação controlada de novas versões.
+# Oferece escalabilidade horizontal para lidar com o tráfego aumentado.
+
+# encerrar
+# comando: kubectl delete deployment NOME_DO_DEPLOYMENT

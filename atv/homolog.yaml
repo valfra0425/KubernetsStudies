@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: homolog
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hom-front
+  namespace: homolog
+  labels: 
+    app: homolog
+spec:
+  selector:
+    matchLabels:
+      app: homolog
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: homolog
+    spec:
+      containers:
+        - name: dev-homolog-pod
+          image: denirow/prog-redes
+          ports:
+          - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: homolog
+  name: cip-homolog
+spec:
+  type: ClusterIP
+  selector:
+    app: homolog
+  ports:
+  - port: 80
+    targetPort: 80
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-homolog
+  namespace: homolog
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: homolog.10.49.10.63.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: cip-homolog
+            port:
+              number: 80

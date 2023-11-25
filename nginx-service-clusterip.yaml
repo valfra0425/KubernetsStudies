@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-end-cip
+spec:
+  type: ClusterIP
+  selector:
+    app: front-end
+  ports:
+  - port: 80
+    targetPort: 80
+
+# Resumidamente, este arquivo YAML cria um serviço chamado "front-end-cip" do tipo ClusterIP que direciona
+# o tráfego para os pods rotulados como "app: front-end" na porta 80. Esse serviço é útil quando você deseja
+# expor uma aplicação internamente no cluster e não precisa de exposição externa.
+
+# Executar:
+# comando: kubectl apply -f nginx-service-clusterip.yaml
+
+# ver services
+# comando: kubectl get services
+
+# Definição: O Service é um recurso no Kubernetes que fornece uma maneira abstrata de expor aplicativos como serviços de rede.
+# Características Principais:
+# Permite que outros aplicativos ou serviços descubram e comuniquem com os pods.
+# Existem vários tipos de serviços (ClusterIP, NodePort, LoadBalancer) para diferentes necessidades de exposição.
+# O Service abstrai a rede, permitindo que os pods se movam ao longo do tempo sem afetar a comunicação externa.
+# Pode ser usado em conjunto com Selectors para direcionar o tráfego para os pods desejados.
+
+# encerrar
+# comando: kubectl delete service NOME_DO_SERVICO
