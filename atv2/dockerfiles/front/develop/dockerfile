@@ -1,0 +1,41 @@
+# Use a imagem Node.js 16 no Alpine Linux como base
+FROM node:16-alpine
+
+# Instale o Git no contêiner
+RUN apk add --no-cache git
+
+RUN apk --no-cache add openssl
+
+RUN apk add --no-cache libssl1.1
+
+# Defina o diretório de trabalho dentro do contêiner
+WORKDIR /app
+
+# Clone o repositório do GitHub
+RUN git clone https://github.com/RelampagoMarquin/web-nlw-esports.git
+
+# muda para a pasta /app/server-nlw-esports/
+WORKDIR /app/web-nlw-esports/
+
+# pegando as branchs da origin
+RUN git fetch
+
+# mudando branch
+RUN git checkout develop
+
+# Instale as dependências usando o npm
+RUN npm install
+
+# Comando para iniciar sua aplicação
+CMD ["npm", "run", "dev", "--", "--host"]
+
+# Porta exposta para acessar a api
+EXPOSE 80
+
+# docker build -t web-nlw-develop:1.0 .
+
+# docker tag web-nlw-develop:1.0 valfranc/web-nlw-develop:latest
+
+# docker login
+
+# docker push valfranc/web-nlw-develop:latest

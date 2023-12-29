@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-production
+  namespace: production
+  labels: 
+    app: label-production
+spec:
+  selector:
+    matchLabels:
+      app: label-production
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: label-production
+    spec:
+      containers:
+        - name: front-production
+          image: valfranc/web-nlw-production:latest
+          ports:
+          - containerPort: 80
+          env:
+          - name: VITE_API_URL
+            value: "http://api-production.192.168.56.1.nip.io"
+          command: ["/bin/sh", "-c", "git pull && npm i && npm run dev -- --host --port 80"]
+        - name: back-production
+          image: valfranc/server-nlw-production:latest
+          ports:
+          - containerPort: 3333
+          env:  # Correção: env deve estar dentro de containers
+          - name: DATABASE_URL
+            value: "mongodb+srv://valmirfrancisco1:alBYIjPGChRt0tu4@cluster0.mcejfas.mongodb.net/main"
+          command: ["/bin/sh", "-c", "git pull && npm i && npx prisma db push && npx prisma db seed && npm run dev"]
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: production
+  name: cip-production
+spec:
+  type: ClusterIP
+  selector:
+    app: label-production
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  - name: api
+    port: 3333
+    targetPort: 3333
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-production
+  namespace: production
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: production.192.168.56.1.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: cip-production
+            port:
+              number: 80
+  - host: api-production.192.168.56.1.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: cip-production
+            port:
+              number: 3333

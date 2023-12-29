@@ -1,0 +1,4 @@
+Alunos: Valmir Francisco // Marcos Antonio
+Github do Front: https://github.com/RelampagoMarquin/web-nlw-esports
+Github do Back: https://github.com/RelampagoMarquin/server-nlw-esports
+OBS: antes de executar qualquer arquivo yaml é necesário trocar o ip dos hosts do ingress e também no .env no deployment do front
